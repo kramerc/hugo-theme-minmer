@@ -1,5 +1,39 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
-<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
-{{ partialCached "head/css.html" . }}
-{{ partialCached "head/js.html" . }}
+{{- $robots := "index, follow" }}
+{{ if (or .Params.robotsNoIndex (not (or hugo.IsProduction (eq site.Params.env "production")))) -}}
+    {{ $robots = "noindex, nofollow" -}}
+{{ end -}}
+<meta name="robots" content="{{ $robots }}">
+
+{{- $title := printf "%s | %s" .Title site.Title }}
+{{- if .IsHome -}}
+    {{ $title = site.Title }}
+{{- end }}
+<title>{{ $title }}</title>
+
+{{- with (or .Params.keywords .Params.tags (and .IsHome site.Params.keywords)) }}
+    {{- $tags := delimit . ", " }}
+    <meta name="keywords" content="{{ $tags }}">
+{{ end -}}
+
+{{ $description := (or .Description (and .IsPage (.Summary | plainify | strings.TrimSpace)) .Site.Params.description) }}
+<meta name="description" content="{{ $description }}">
+<meta name="author" content="{{ .Params.author | default site.Params.author }}">
+<link rel="canonical" content="{{ .Permalink | safe.URL }}">
+
+{{- range .AlternativeOutputFormats }}
+    <link rel="{{ .Rel }}" type="{{ .MediaType.Type | html }}" href="{{ .Permalink | safe.URL }}" title="{{ $title }}">
+{{ end -}}
+
+{{ template "_internal/schema.html" . }}
+{{ template "_internal/opengraph.html" . }}
+{{ template "_internal/twitter_cards.html" . }}
+
+{{- with (.Param "social.fediverse_creator") -}}
+    <meta name="fediverse:creator" content="{{ . }}">
+{{- end -}}
+
+{{- partialCached "head/css.html" . -}}
+{{- partialCached "head/js.html" . -}}
+{{- partial "head/extend.html" . -}}
