@@ -1,0 +1,10 @@
+User-agent: *
+{{- if not (and hugo.IsProduction (eq site.Params.env "production")) }}
+Disallow: /
+{{ end -}}
+{{- range .Pages -}}
+{{- if .Params.robotsNoIndex -}}
+Disallow: {{ .RelPermalink }}
+{{ end -}}
+{{ end }}
+Sitemap: {{ "sitemap.xml" | absURL }}

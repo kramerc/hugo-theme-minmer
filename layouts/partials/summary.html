@@ -1,0 +1,10 @@
+<div class="summary">
+  <h2 class="title"><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
+  {{- $dateMachine := .Date | time.Format "2006-01-02T15:04:05-07:00" }}
+  {{- $dateHuman := .Date | time.Format ":date_long" }}
+  <time datetime="{{ $dateMachine }}">{{ $dateHuman }}</time>
+  {{ .Summary }}
+  {{ if .Truncated }}
+    <p class="read-more"><a href="{{ .RelPermalink }}">Read more&hellip;</a></p>
+  {{ end }}
+</div>
