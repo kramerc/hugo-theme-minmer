@@ -1,6 +1,6 @@
 {{ define "main" }}
   {{ .Content }}
   {{ range site.RegularPages.Limit 3 }}
-    {{ partial "partials/summary.html" . }}
+    {{ partial "summary.html" . }}
   {{ end }}
 {{ end }}

@@ -6,7 +6,7 @@
   {{ $paginator := .Paginate $pages }}
 
   {{ range $paginator.Pages }}
-    {{ partial "partials/summary.html" . }}
+    {{ partial "summary.html" . }}
   {{ end }}
 
   {{ template "_internal/pagination.html" . }}
